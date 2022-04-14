@@ -30,12 +30,14 @@ class LedScreen:
         self._init_serport(serport)
 
     def _init_serport(self, serport: str):
-        self.serport = serial.Serial(serport,
-                                     BAUDRATE,
-                                     bytesize=serial.EIGHTBITS,
-                                     parity=serial.PARITY_NONE,
-                                     stopbits=serial.STOPBITS_ONE,
-                                     timeout=TIMEOUT)
+        self.serport = serial.Serial(
+            serport,
+            BAUDRATE,
+            bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            timeout=TIMEOUT,
+        )
 
 
 class Desay6(LedScreen):
