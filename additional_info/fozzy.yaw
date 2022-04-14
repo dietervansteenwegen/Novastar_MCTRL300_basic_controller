@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FileType>YAT Workspace Settings</FileType>
+  <SettingsVersion>1.2.1</SettingsVersion>
+  <ProductVersion>1.99.52</ProductVersion>
+  <Warning>Modifying this file may cause undefined behavior!</Warning>
+  <Saved>
+    <TimeStamp>2022-04-14T12:20:29.5410752+02:00</TimeStamp>
+    <UserName>fozzy</UserName>
+  </Saved>
+  <AutoSaved>false</AutoSaved>
+  <Workspace>
+    <AlwaysOnTop>false</AlwaysOnTop>
+    <Layout>Maximize</Layout>
+    <TerminalSettings>
+      <FilePath>F:\pcloud\Projects\Code\desay6mm_upad2mm6_ctrl\add_info\Terminal1.yat</FilePath>
+      <FixedIndex>1</FixedIndex>
+      <Window>
+        <State>Maximized</State>
+        <Location>
+          <X>0</X>
+          <Y>0</Y>
+        </Location>
+        <Size>
+          <Width>900</Width>
+          <Height>675</Height>
+        </Size>
+      </Window>
+    </TerminalSettings>
+  </Workspace>
+</Settings>

@@ -1,0 +1,11 @@
+# Always include:
+include LICENSE README.md
+
+# Include docs completely
+graft docs
+
+# Exclude compiled python files
+global-exclude *.py[co]
+
+# remove doc builds
+prune docs/build
