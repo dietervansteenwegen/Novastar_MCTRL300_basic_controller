@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import List
 
+import serial.serialutil
 from PyQt5 import QtWidgets
 from serports import serports
 
@@ -25,30 +26,43 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lst_serial_ports.addItem(f' {port[1]}  ({port[2]}, {port[3]})')
         if len(self.serial_available_ports) > 0:
             self.btn_serial_open.setEnabled(True)
+            self.lst_serial_ports.setCurrentRow(0)
         else:
             self.btn_serial_open.setEnabled(False)
             self.lbl_serial_status.setText('No ports found...')
+            self.lbl_serial_status.setStyleSheet('background-color:orange')
 
     def _open_serial_port(self, checked) -> None:
         if checked:
             if len(self.serial_available_ports) == 0:
-                self.lbl_serial_status.setText('No serial ports')
+                # self.lbl_serial_status.setText('No serial ports')
                 self.btn_serial_open.setChecked(False)
                 return
             index = self.lst_serial_ports.currentRow()
-            self.serport = serports.Mctrl300Serial(self.serial_available_ports[index][1])
-            if self.serport.isOpen():
+            try:
+                self.serport = serports.Mctrl300Serial(self.serial_available_ports[index][1])
+            except (FileNotFoundError, serial.serialutil.SerialException) as e:
+                # TODO: add logging to file and option to open logfile
+                print(e)
+                self._refresh_serial_ports()
+                self.btn_serial_open.setChecked(False)
+            if self.serport and self.serport.isOpen():
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
+                self.btn_serial_open.setText(
+                    f'Click to close {self.serial_available_ports[index][1]}',
+                )
+                self.lbl_serial_status.setStyleSheet('background-color:green')
             else:
                 self.lbl_serial_status.setText(
-                    f'Error opening {self.serial_available_ports[index][1]}. See logs.',
-                )
+                    f'Error opening {self.serial_available_ports[index][1]}. See logs.', )
+                self.lbl_serial_status.setStyleSheet('background-color:red')
                 self.serport = None
-
         else:
             if self.serport:
                 self.serport.close()
             self.lbl_serial_status.setText('Closed serial port')
+            self.lbl_serial_status.setStyleSheet('background-color:orange')
+            self.btn_serial_open.setText('Click to open selected port')
 
 
 def start_gui():
