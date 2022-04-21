@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
 
     def _create_brightness_block(self):
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(290, 50, 112, 261))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(290, 50, 400, 260))
         self.horizontalLayoutWidget.setObjectName('horizontalLayoutWidget')
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -43,14 +43,19 @@ class Ui_MainWindow(object):
         self.sldr_brightness.setTickInterval(10)
         self.sldr_brightness.setObjectName('sldr_brightness')
         self.horizontalLayout.addWidget(self.sldr_brightness)
+
+        self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.horizontalLayoutWidget)
+        self.verticalLayoutWidget_3.setMaximumHeight(50)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
+        self.horizontalLayout.addWidget(self.verticalLayoutWidget_3)
         self.lbl_brightness = QtWidgets.QLabel(self.horizontalLayoutWidget)
         self.lbl_brightness.setText('Brightness:')
         self.lbl_brightness.setObjectName('lbl_brightness')
-        self.horizontalLayout.addWidget(self.lbl_brightness)
+        self.verticalLayout_3.addWidget(self.lbl_brightness)
         self.lbl_brightness_val = QtWidgets.QLabel(self.horizontalLayoutWidget)
         self.lbl_brightness_val.setText('Unknown')
         self.lbl_brightness_val.setObjectName('lbl_brightness_val')
-        self.horizontalLayout.addWidget(self.lbl_brightness_val)
+        self.verticalLayout_3.addWidget(self.lbl_brightness_val)
 
     def _create_serial_port_block(self):
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
@@ -110,7 +115,7 @@ class Ui_MainWindow(object):
 
     def _create_pattern_block(self):
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(440, 60, 160, 233))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(490, 60, 160, 233))
         self.verticalLayoutWidget.setObjectName('verticalLayoutWidget')
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
