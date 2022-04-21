@@ -25,19 +25,12 @@ def initialize_logger() -> logging.Logger:
 
 
 class LedScreen:
-    def __init__(self, serport: str):
+    def __init__(self, serport: serial.Serial):
         self.log = initialize_logger()
         self._init_serport(serport)
 
-    def _init_serport(self, serport: str):
-        self.serport = serial.Serial(
-            serport,
-            BAUDRATE,
-            bytesize=serial.EIGHTBITS,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            timeout=TIMEOUT,
-        )
+    def _init_serport(self, serport: serial.Serial):
+        self.serport = serport
 
 
 class Desay6(LedScreen):
@@ -49,7 +42,7 @@ class Desay6(LedScreen):
     WHITE_6 = bytes.fromhex('17 FE 00 01 00 FF FF 01 00 01 01 00 02 01 00 05 74 58')
     SLASH_6 = bytes.fromhex('4F FE 00 01 00 FF FF 01 00 01 01 00 02 01 00 08 AF 58')
 
-    def __init__(self, serport: str):
+    def __init__(self, serport: serial.Serial):
         super().__init__(serport)
 
     def white(self):
@@ -64,5 +57,5 @@ class Upad26(LedScreen):
     # WHITE_26 = bytes.fromhex('55 aa 00 2b fe 00 00 00 00 00 00 00 02 00 00 00 02 00 82 56')
     SLASH_26 = bytes.fromhex('8F FE 00 01 01 FF FF 01 00 01 01 00 02 01 00 08 F0 58')
 
-    def __init__(self, serport: str):
+    def __init__(self, serport: serial.Serial):
         super().__init__(serport)
