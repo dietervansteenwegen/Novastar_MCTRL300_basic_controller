@@ -13,15 +13,15 @@ TIMEOUT = 4
 
 class LedScreen:
     def __init__(self, serport: serial.Serial):
-        self.log = initialize_logger()
+        # self.log = initialize_logger()
         self._init_serport(serport)
 
     def _init_serport(self, serport: serial.Serial):
         self.serport = serport
 
 
-class Desay6(LedScreen):
-    """Class for the Desay 6mm led panels.
+class Out1(LedScreen):
+    """Class for output 1.
 
     Args:
         serport (str): name of the serial port device connected to the controller.
@@ -62,8 +62,8 @@ class Desay6(LedScreen):
         self.serport.write(self.SLASH_6)
 
 
-class Upad26(LedScreen):
-    """Class for the UPAD 2.6mm led panels.
+class Out2(LedScreen):
+    """Class for output 2.
 
     Args:
         serport (str): name of the serial port device connected to the controller.
@@ -100,8 +100,7 @@ class Upad26(LedScreen):
         # self.serport.write(self.WHITE_26)
         raise NotImplementedError(
             'Still need to capture the command to display the white pattern'
-            'on the UPAD 2.6mm',
-        )
+            'on the UPAD 2.6mm', )
 
     def slash(self) -> None:
         """Display the slash (moving diagonal lines) pattern."""
