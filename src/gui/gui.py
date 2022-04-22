@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import List
 
+import desay6_upad26_ctrl.desay6_upad26_LED as LED
 import serial.serialutil
 from PyQt5 import QtWidgets
 from serports import serports
@@ -16,7 +17,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_serial_refresh.clicked.connect(self._refresh_serial_ports)
         self.btn_serial_open.clicked.connect(lambda checked: self._open_serial_port(checked))
         self.serport = None
-        self.cmb_output.setCurrentIndex(1)
+        self.cmb_output.currentIndexChanged.connect(lambda index: self._output_changed(index))
+        self.led_screen = None
+
+    def _output_changed(self, index: int):
+        # TODO: if serial port changes, self.led_screen does not get updated with the new port
+        # TODO: change so that first you need to select port, then output, then controls are shown
+        if index == 0 or self.serport is None:
+            self.led_screen = None
+        elif index == 1:
+            self.led_screen = LED.Out1(self.serport)
+        elif index == 2:
+            self.led_screen = LED.Out2(self.serport)
 
     def _refresh_serial_ports(self) -> None:
         self.lst_serial_ports.clear()
@@ -49,12 +61,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.serport and self.serport.isOpen():
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
                 self.btn_serial_open.setText(
-                    f'Click to close {self.serial_available_ports[index][1]}',
-                )
+                    f'Click to close {self.serial_available_ports[index][1]}', )
                 self.lbl_serial_status.setStyleSheet('background-color:green')
             else:
-                self.lbl_serial_status.setText(
-                    f'Error opening {self.serial_available_ports[index][1]}. See logs.', )
+                self.lbl_serial_status.setText('Error opening port. See logs.')
                 self.lbl_serial_status.setStyleSheet('background-color:red')
                 self.serport = None
         else:
