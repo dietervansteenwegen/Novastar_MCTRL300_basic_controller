@@ -91,7 +91,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.lbl_serial_status)
 
         self.lbl_output_port = QtWidgets.QLabel(self.verticalLayoutWidget_2)
-        self.lbl_output_port.setText('Output port:')
+        self.lbl_output_port.setText('Screen connected to:')
         self.lbl_output_port.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_output_port.setObjectName('lbl_output_port')
         self.verticalLayout_2.addWidget(self.lbl_output_port)
@@ -99,8 +99,8 @@ class Ui_MainWindow(object):
         self.cmb_output.setToolTip('Select which output screen is connected to')
         self.cmb_output.setEditable(False)
         self.cmb_output.setObjectName('cmb_output')
-        self.cmb_output.setCurrentIndex(-1)
-        self.cmb_output.addItems(['Output 1', 'Output 2'])
+        self.cmb_output.addItems(['No screen', 'Output 1', 'Output 2'])
+        self.cmb_output.setCurrentIndex(0)
         self.verticalLayout_2.addWidget(self.cmb_output)
 
     def _set_tab_order(self, MainWindow):
