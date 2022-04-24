@@ -28,8 +28,8 @@ See this [link](www.vansteenwegen.org) for information on some of my other proje
 
 Version numbers according to [Semantic Versioning 2.0.0](https://semver.org/).
 
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dietervansteenwegen/desay6mm_upad2mm6_ctrl/develop?style=plastic)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dietervansteenwegen/Novastar_MCTRL300_basic_controller/develop?style=plastic)
 
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/dietervansteenwegen/desay6mm_upad2mm6_ctrl/develop?style=plastic)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/dietervansteenwegen/Novastar_MCTRL300_basic_controller/develop?style=plastic)
 
-![GitHub](https://img.shields.io/github/license/dietervansteenwegen/desay6mm_upad2mm6_ctrl?style=plastic)
+![GitHub](https://img.shields.io/github/license/dietervansteenwegen/Novastar_MCTRL300_basic_controller?style=plastic)
