@@ -61,6 +61,14 @@ class Out1(LedScreen):
         """Display the slash (moving diagonal lines) pattern."""
         self.serport.write(self.SLASH_6)
 
+    def black(self) -> None:
+        """Display a black screen."""
+        raise NotImplementedError()
+
+    def freeze(self) -> None:
+        """Freeze the screen."""
+        raise NotImplementedError('Still need to capture cmd for freeze.')
+
 
 class Out2(LedScreen):
     """Class for output 2.
@@ -105,3 +113,11 @@ class Out2(LedScreen):
     def slash(self) -> None:
         """Display the slash (moving diagonal lines) pattern."""
         self.serport.write(self.SLASH_26)
+
+    def black(self) -> None:
+        """Display a black screen."""
+        raise NotImplementedError('Still need to capture cmd for black.')
+
+    def freeze(self) -> None:
+        """Freeze the screen."""
+        raise NotImplementedError('Still need to capture cmd for freeze.')
