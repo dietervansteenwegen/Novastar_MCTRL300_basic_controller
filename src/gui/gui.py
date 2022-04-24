@@ -14,22 +14,37 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self._refresh_serial_ports()
-        self.btn_serial_refresh.clicked.connect(self._refresh_serial_ports)
-        self.btn_serial_open.clicked.connect(lambda checked: self._open_serial_port(checked))
         self.serport = None
-        self.cmb_output.currentIndexChanged.connect(lambda index: self._output_changed(index))
         self.led_screen = None
         self.state = 1
+        self._connect_slots()
         self._update_to_state()
+        self._set_up_timer_brightness()
 
-    def _change_state_to(self, state: int):
-        if state == 2 and self.cmb_output.currentIndex() > 0:
-            state = 3
-        self.state = state
-        self._update_to_state()
+    def _set_up_timer_brightness(self):
+        # TODO: Timer querying brightness and setting slider value + label
+        # TODO: Code for setting/getting brightness
+        pass
+
+    def _connect_slots(self):
+        self.btn_serial_refresh.clicked.connect(self._refresh_serial_ports)
+        self.btn_serial_open.clicked.connect(lambda checked: self._open_serial_port(checked))
+        self.cmb_output.currentIndexChanged.connect(lambda index: self._output_changed(index))
+        self.btn_blackout.clicked.connect(self._pattern_black)
+        self.btn_blue.clicked.connect(self._pattern_blue)
+        self.btn_freeze.clicked.connect(self._pattern_freeze)
+        self.btn_green.clicked.connect(self._pattern_green)
+        self.btn_normal.clicked.connect(self._pattern_normal)
+        self.btn_red.clicked.connect(self._pattern_red)
+        self.btn_slash.clicked.connect(self._pattern_slash)
+        self.btn_white.clicked.connect(self._pattern_white)
+        self.sldr_brightness.sliderMoved.connect(self._brightness_slider_moved)
+
+    def _brightness_slider_moved(self, v):
+        # TODO: send out brightness set commands
+        self.lbl_brightness_value.setText(str(v))
 
     def _output_changed(self, index: int):
-
         if index == 0 or self.serport is None:
             self.led_screen = None
             self._change_state_to(2)
@@ -90,6 +105,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.btn_serial_open.setText('Click to open selected port')
             self._change_state_to(1)
 
+    def _change_state_to(self, state: int):
+        if state == 2 and self.cmb_output.currentIndex() > 0:
+            state = 3
+        self.state = state
+        self._update_to_state()
+
     def _update_to_state(self):
         self.cmb_output.setEnabled(self.state > 1)
         self.sldr_brightness.setEnabled(self.state > 2)
@@ -101,6 +122,38 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_slash.setEnabled(self.state > 2)
         self.btn_freeze.setEnabled(self.state > 2)
         self.btn_blackout.setEnabled(self.state > 2)
+
+    def _pattern_red(self):
+        if self.led_screen:
+            self.led_screen.red()
+
+    def _pattern_blue(self):
+        if self.led_screen:
+            self.led_screen.blue()
+
+    def _pattern_green(self):
+        if self.led_screen:
+            self.led_screen.green()
+
+    def _pattern_white(self):
+        if self.led_screen:
+            self.led_screen.white()
+
+    def _pattern_slash(self):
+        if self.led_screen:
+            self.led_screen.slash()
+
+    def _pattern_normal(self):
+        if self.led_screen:
+            self.led_screen.normal()
+
+    def _pattern_black(self):
+        if self.led_screen:
+            self.led_screen.black()
+
+    def _pattern_freeze(self):
+        if self.led_screen:
+            self.led_screen.freeze()
 
 
 def start_gui():
