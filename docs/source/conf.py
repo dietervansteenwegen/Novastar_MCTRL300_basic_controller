@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Desay 6mm and UPAD 2.6mm test pattern control'
+project = 'Novastar MCTRL300 basic controller'
 copyright = '2022, Dieter Vansteenwegen'
 author = 'Dieter Vansteenwegen'
 
