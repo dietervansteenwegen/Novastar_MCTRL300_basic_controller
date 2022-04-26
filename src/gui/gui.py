@@ -3,6 +3,7 @@ from typing import List
 
 import desay6_upad26_ctrl.desay6_upad26_LED as LED
 import serial.serialutil
+from novastar_mctrl300.mctrl300 import msg_gen
 from PyQt5 import QtWidgets
 from serports import serports
 
@@ -20,6 +21,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._connect_slots()
         self._update_to_state()
         self._set_up_timer_brightness()
+        self.brightness_msg = msg_gen()
 
     def _set_up_timer_brightness(self):
         # TODO: Timer querying brightness and setting slider value + label
@@ -43,6 +45,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def _brightness_slider_moved(self, v):
         # TODO: send out brightness set commands
         self.lbl_brightness_value.setText(str(v))
+        if self.led_screen:
+            self.led_screen.send_msg(
+                self.brightness_msg.gen(serno=0x15, reg_addr=[0x2, 0, 0, 1], data_len=1, data=v),
+            )
 
     def _output_changed(self, index: int):
         if index == 0 or self.serport is None:
@@ -61,6 +67,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for port in sorted(serports.get_available_ports()):
             self.serial_available_ports.append(port)
             self.lst_serial_ports.addItem(f' {port[1]}  ({port[2]}, {port[3]})')
+            # if port[3][:6] == 'CP2102':
+            # TODO: color item in list green (this is a possible controller)
+            # pass
         if len(self.serial_available_ports) > 0:
             self.btn_serial_open.setEnabled(True)
             self.lst_serial_ports.setCurrentRow(0)

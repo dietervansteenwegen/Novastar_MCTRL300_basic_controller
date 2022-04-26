@@ -69,6 +69,9 @@ class Out1(LedScreen):
         """Freeze the screen."""
         raise NotImplementedError('Still need to capture cmd for freeze.')
 
+    def send_msg(self, msg) -> None:
+        self.serport.write(msg)
+
 
 class Out2(LedScreen):
     """Class for output 2.
