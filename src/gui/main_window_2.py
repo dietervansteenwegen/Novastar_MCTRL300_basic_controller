@@ -12,9 +12,16 @@ from PyQt5 import QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName('MainWindow')
         MainWindow.resize(721, 401)
         MainWindow.setWindowTitle('Novastar MCTRL300 basic controller')
+        icon = QtGui.QIcon()
+        icon.addPixmap(
+            QtGui.QPixmap('./assets/images/logo.png'), QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName('centralwidget')
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
@@ -23,6 +30,7 @@ class Ui_MainWindow(object):
         self._create_serial_port_block()
         self._create_output_block()
         self._create_controls_block()
+        self._create_statusbar(MainWindow)
         self._create_menu(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
         # QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -90,7 +98,8 @@ class Ui_MainWindow(object):
         self.cmb_output.setObjectName('cmb_output')
         self.lbl_output_port.setText('Screen connected to:')
         self.cmb_output.setToolTip('Select which output screen is connected to')
-        self.cmb_output.addItems(['No screen', 'Output 1', 'Output 2'])
+        self.cmb_output.addItems(['No screen', 'Output 1'])
+        # self.cmb_output.addItems(['No screen', 'Output 1', 'Output 2'])
         self.cmb_output.setCurrentIndex(0)
         self.v_layout_output.addWidget(self.cmb_output)
         self.line_2 = QtWidgets.QFrame(self.centralwidget)
@@ -201,21 +210,71 @@ class Ui_MainWindow(object):
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 721, 20))
         self.menubar.setObjectName('menubar')
+        MainWindow.setMenuBar(self.menubar)
+
+        self._add_pattern_menu(MainWindow)
+
         self.menu_help = QtWidgets.QMenu(self.menubar)
         self.menu_help.setObjectName('menu_help')
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName('statusbar')
-        MainWindow.setStatusBar(self.statusbar)
+        self.menu_help.setTitle('&Help')
         self.menu_show_logs = QtWidgets.QAction(MainWindow)
         self.menu_show_logs.setShortcut('Ctrl+Shift+L')
         self.menu_show_logs.setObjectName('menu_show_logs')
+        self.menu_show_logs.setText('&Show logs')
+        self.menu_help.addAction(self.menu_show_logs)
         self.menu_about = QtWidgets.QAction(MainWindow)
         self.menu_about.setShortcut('Ctrl+Shift+A')
         self.menu_about.setObjectName('menu_about')
-        self.menu_help.addAction(self.menu_show_logs)
+        self.menu_about.setText('&About')
         self.menu_help.addAction(self.menu_about)
         self.menubar.addAction(self.menu_help.menuAction())
-        self.menu_help.setTitle('Help')
-        self.menu_show_logs.setText('Show logs')
-        self.menu_about.setText('About')
+
+    def _add_pattern_menu(self, MainWindow):
+        self.menubar_pattern = QtWidgets.QMenu(self.menubar)
+        self.menubar_pattern.setTitle('&Patterns')
+        self.menubar.addAction(self.menubar_pattern.menuAction())
+
+        self.set_normal = QtWidgets.QAction(MainWindow)
+        self.set_normal.setShortcut('Ctrl+n')
+        self.set_normal.setText('&Normal/Live')
+        self.menubar_pattern.addAction(self.set_normal)
+
+        self.set_red = QtWidgets.QAction(MainWindow)
+        self.set_red.setShortcut('Ctrl+r')
+        self.set_red.setText('&Red')
+        self.menubar_pattern.addAction(self.set_red)
+
+        self.set_green = QtWidgets.QAction(MainWindow)
+        self.set_green.setShortcut('Ctrl+g')
+        self.set_green.setText('&Green')
+        self.menubar_pattern.addAction(self.set_green)
+
+        self.set_blue = QtWidgets.QAction(MainWindow)
+        self.set_blue.setShortcut('Ctrl+b')
+        self.set_blue.setText('&Blue')
+        self.menubar_pattern.addAction(self.set_blue)
+
+        self.set_white = QtWidgets.QAction(MainWindow)
+        self.set_white.setShortcut('Ctrl+w')
+        self.set_white.setText('&White')
+        self.menubar_pattern.addAction(self.set_white)
+
+        self.set_slash = QtWidgets.QAction(MainWindow)
+        self.set_slash.setShortcut('Ctrl+s')
+        self.set_slash.setText('&Slash')
+        self.menubar_pattern.addAction(self.set_slash)
+
+        # self.set_blackout = QtWidgets.QAction(MainWindow)
+        # self.set_blackout.setShortcut('Ctrl+l')
+        # self.set_blackout.setText('B&lackout')
+        # self.menubar_pattern.addAction(self.set_blackout)
+
+        self.set_freeze = QtWidgets.QAction(MainWindow)
+        self.set_freeze.setShortcut('Ctrl+f')
+        self.set_freeze.setText('&Freeze')
+        self.menubar_pattern.addAction(self.set_freeze)
+
+    def _create_statusbar(self, MainWindow):
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName('statusbar')
+        MainWindow.setStatusBar(self.statusbar)
