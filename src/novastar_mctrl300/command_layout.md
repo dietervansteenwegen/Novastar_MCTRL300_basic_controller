@@ -47,7 +47,7 @@ _Example:_
 | Address       | Length (bits) | Description        | Values                                                               |
 | ------------- | ------------- | ------------------ | -------------------------------------------------------------------- |
 | 0x02 00 01 01 | 8             | Test pattern       | 1: Off, 2:R, 3:G, 4:B, 5:Wh, 6:Hor, 7:Vertical, 8:Slash, 9:Grayscale |
-| 0x02 00 00 01 | 8             | Overall brightness | 0-0xFF                                                               |
+| 0x02 00 00 01 | 8             | Overall brightness | 0 to 0xFF                                                            |
 
 
 # Acknowledge or data Tx:
