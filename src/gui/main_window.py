@@ -8,11 +8,14 @@ __project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_bas
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+import logging
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
 
+        self.log = logging.getLogger(__name__)
+        self.log.debug('Start setupUi')
         MainWindow.setObjectName('MainWindow')
         MainWindow.resize(721, 401)
         MainWindow.setWindowTitle('Novastar MCTRL300 basic controller')
@@ -35,6 +38,7 @@ class Ui_MainWindow(object):
         self._create_menu(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
         # QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.log.debug('setupUi finished.')
 
     def _create_serial_port_block(self):
         self.v_layout_port = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)

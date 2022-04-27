@@ -9,6 +9,7 @@ import serial
 from typing import Union, List
 from novastar_mctrl300.serports import Mctrl300Serial
 from time import sleep
+import logging
 
 BAUDRATE = 115200
 TIMEOUT = 4
@@ -36,11 +37,12 @@ class MCTRL300:
             serport (serial.Serial): Serial port to which the MCTRL300 is connected.
                                     Initialized to 115200 baud, 8N1
         """
-        # self.log = initialize_logger()
+        self.log = logging.getLogger(__name__)
         self._init_serport(serport)
         self._msg_id: int = 0  # increasing number for each message sent
         self.output = 0
         self.creator = MCTRL300CreateCommand()
+        self.log.debug('Created MCTRL300 object.')
 
     def _init_serport(self, serport: serial.Serial) -> None:
         """Initialize the serial port.
@@ -69,6 +71,7 @@ class MCTRL300:
             data_len=1,
             data=pattern,
         )
+        self.log.debug(f'Set output {port} to pattern no {pattern}')
         self._send_cmd(cmd)
 
     def deactivate_pattern(self, port: int) -> None:
@@ -162,7 +165,7 @@ class MCTRL300:
             timeout_cntr += 0.05
         correct_reply = complete and rx_buff[3] == used_msg_id and rx_buff[2] == 00
         if rx_buff[2] != 0:
-            print(f'wrong reply: {rx_buff}')
+            self.log.error(f'Got an incorrect reply: {rxbuff}', exc_info=True)
 
         return (rx_buff[-reply_data_length:] if correct_reply else None)
 

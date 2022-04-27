@@ -10,6 +10,7 @@ import novastar_mctrl300.mctrl300 as mctrl300
 import serial.serialutil
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
+import logging
 
 from .main_window import Ui_MainWindow
 
@@ -17,6 +18,7 @@ from .main_window import Ui_MainWindow
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        self.log = logging.getLogger(__name__)
         self.setupUi(self)
         self._refresh_serial_ports()
         self.serport = None
@@ -52,6 +54,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.set_slash.triggered.connect(self._pattern_slash)
         # self.set_blackout.triggered.connect(self._pattern_blackout)
         self.set_freeze.triggered.connect(self._pattern_freeze)
+        self.log.debug('Signals/slots connected')
 
     def _brightness_slider_moved(self, v):
         # TODO: send out brightness set commands
@@ -76,9 +79,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _update_brightness_from_screen(self) -> None:
         brightness = self.led_screen.get_brightness(self.selected_port)
+        self.log.debug(f'Querying brightness from output {self.selected_port}')
         if brightness is not None:
             self.lbl_brightness_value.setText(brightness.__str__())
             self.sldr_brightness.setValue(brightness)
+            self.log.debug(f'Response: {brightness}')
         else:
             QtWidgets.QMessageBox.critical(
                 self,
@@ -87,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 f' from output {self.selected_port}. Check connections and configuration...',
                 buttons=QtWidgets.QMessageBox.Ok,
             )
+            self.log.error('Issue while getting brightness.', exc_info=True)
             self.cmb_output.setCurrentIndex(0)
             self._change_state_to(2)
 
@@ -95,10 +101,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.serial_available_ports: List = []
         for port in sorted(serports.get_available_ports()):
             self.serial_available_ports.append(port)
+            self.log.debug(f'Found serial port: {port}')
             self.lst_serial_ports.addItem(f' {port[1]}  ({port[2]}, {port[3]})')
             # if port[3][:6] == 'CP2102':
             # TODO: color item in list green (this is a possible controller)
-            # pass
         if len(self.serial_available_ports) > 0:
             self.btn_serial_open.setEnabled(True)
             self.lst_serial_ports.setCurrentRow(0)
@@ -117,19 +123,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 return
             index = self.lst_serial_ports.currentRow()
             try:
-                self.serport = serports.Mctrl300Serial(self.serial_available_ports[index][1])
-            except (FileNotFoundError, serial.serialutil.SerialException) as e:
-                # TODO: add logging to file and option to open logfile
+                self.log.debug(f'opening serial port {p}')
+                p = self.serial_available_ports[index]
+                self.serport = serports.Mctrl300Serial(p[1])
+            except (FileNotFoundError, serial.serialutil.SerialException):
+                self.log.exception('Issue during opening.')
                 self._refresh_serial_ports()
                 self.btn_serial_open.setChecked(False)
                 self._change_state_to(1)
             if self.serport and self.serport.isOpen():
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
+                self.log.debug(f'Opened serial port {p}')
                 self.btn_serial_open.setText(
                     f'Click to close {self.serial_available_ports[index][1]}', )
                 self.lbl_serial_status.setStyleSheet('background-color:green')
                 self._change_state_to(2)
             else:
+                self.log.error(f'Issue during opening port {p}.')
                 self.lbl_serial_status.setText('Error opening port. See logs.')
                 self.lbl_serial_status.setStyleSheet('background-color:red')
                 self.serport = None
@@ -137,6 +147,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             if self.serport:
                 self.serport.close()
+                self.log.debug(f'Closed {self.serport}')
             self.lbl_serial_status.setText('Closed serial port')
             self.lbl_serial_status.setStyleSheet('background-color:orange')
             self.btn_serial_open.setText('Click to open selected port')
@@ -167,6 +178,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.led_screen:
             self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_red.setChecked(True)
+            self.log.debug(f'Output {self.selected_port} set to RED')
 
     def _pattern_blue(self):
         if self.led_screen:
