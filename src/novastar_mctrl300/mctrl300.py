@@ -232,7 +232,7 @@ class MCTRL300CreateCommand:
         self.msg.append(port - 1)
 
     def _append_board_addr(self) -> None:
-        for i in [0xFF, 0xFF]:
+        for i in [0x00, 0x00]:
             self.msg.append(i)
 
     def _append_cmd_type(self, is_write) -> None:
