@@ -213,7 +213,7 @@ class MCTRL300CreateCommand:
         self._append_dest()
         self._append_card_type()
         self._append_port_addr(port)
-        self._append_board_addr()
+        self._append_board_addr(is_cmd)
         self._append_cmd_type(is_write)
         self._append_reserved()
         self._append_reg_addr(reg_addr)
@@ -284,8 +284,8 @@ class MCTRL300CreateCommand:
     def _append_port_addr(self, port) -> None:
         self.msg.append(port - 1)
 
-    def _append_board_addr(self) -> None:
-        for i in [0x00, 0x00]:
+    def _append_board_addr(self, is_cmd: bool) -> None:
+        for i in ([0xFF, 0xFF] if is_cmd else [0x0, 0x0]):
             self.msg.append(i)
 
     def _append_cmd_type(self, is_write) -> None:
