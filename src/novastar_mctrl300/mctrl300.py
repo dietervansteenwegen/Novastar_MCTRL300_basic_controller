@@ -130,7 +130,7 @@ class MCTRL300CreateCommand:
         serno: int,
         reg_addr: int,
         data_len: int,
-        data: Union[int, List[int]],
+        data: Union[int, List[int], None],
         port: int,
         is_cmd: bool = True,
         is_write: bool = True,
@@ -182,7 +182,9 @@ class MCTRL300CreateCommand:
         self.msg.append(c & 0xFF)
         self.msg.append(c >> 8)
 
-    def _append_data(self, data: Union[int, list]) -> None:
+    def _append_data(self, data: Union[int, list, None]) -> None:
+        if not data:
+            return
         self.msg.append(*data if type(data) == list else data)
 
     def _append_data_len(self, data_len) -> None:
