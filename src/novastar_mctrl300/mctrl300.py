@@ -183,9 +183,15 @@ class MCTRL300CreateCommand:
         self.msg.append(c >> 8)
 
     def _append_data(self, data: Union[int, list, None]) -> None:
-        if not data:
-            return
-        self.msg.append(*data if type(data) == list else data)
+        """Append the data payload to the message.
+
+        Message might be a list of bytes, a single value (int), or None (ie for a request).
+
+        Args:
+            data (Union[int, list, None]): data payload (None if no data to be sent)
+        """
+        if data:
+            self.msg.append(*data if type(data) == list else data)
 
     def _append_data_len(self, data_len) -> None:
         """Add the data length.
