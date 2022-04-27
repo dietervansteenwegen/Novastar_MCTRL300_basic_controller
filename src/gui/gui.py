@@ -67,6 +67,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.led_screen = mctrl300.MCTRL300(serport=self.serport)
             self.selected_port = 2
             self._change_state_to(3)
+            self._update_brightness_from_screen()
+
+    def _update_brightness_from_screen(self) -> None:
+        brightness = self.led_screen.get_brightness(self.selected_port)
+        if brightness is not None:
+            self.lbl_brightness_value.setText(brightness.__str__())
+            self.sldr_brightness.setValue(brightness)
+        else:
+            QtWidgets.QMessageBox.critical(
+                self,
+                'No reply from screen', 'Screen did not reply when requesting current brightness'
+                f' from output {self.selected_port}. Check connections and configuration...',
+                buttons=QtWidgets.QMessageBox.Ok,
+            )
+            self.cmb_output.setCurrentIndex(0)
+            self._change_state_to(2)
+            print('changed state')
 
     def _refresh_serial_ports(self) -> None:
         self.lst_serial_ports.clear()
