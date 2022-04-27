@@ -57,7 +57,7 @@ def setup_logger() -> logging.Logger:
 def add_rotating_file(logger: logging.Logger) -> logging.Logger:
     rot_fil_handler = logging.handlers.RotatingFileHandler(
         LOGFILE,
-                                                           maxBytes=LOGMAXBYTES,
+        maxBytes=LOGMAXBYTES,
         backupCount=3,
     )
     rot_fil_handler.doRollover()
@@ -156,7 +156,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.serial_available_ports: List = []
         for port in sorted(serports.get_available_ports()):
             self.serial_available_ports.append(port)
-            self.log.debug(f'Found serial port: {port}')
+            self.log.debug(f'Found serial port: {port[1:]}')
             self.lst_serial_ports.addItem(f' {port[1]}  ({port[2]}, {port[3]})')
             # if port[3][:6] == 'CP2102':
             # TODO: color item in list green (this is a possible controller)
@@ -179,7 +179,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             index = self.lst_serial_ports.currentRow()
             try:
                 p = self.serial_available_ports[index]
-                self.log.debug(f'opening serial port {p}')
+                self.log.debug(f'opening serial port {p[1:]}')
                 self.serport = serports.Mctrl300Serial(p[1])
             except (FileNotFoundError, serial.serialutil.SerialException):
                 self.log.exception('Issue during opening.')
@@ -188,7 +188,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self._change_state_to(1)
             if self.serport and self.serport.isOpen():
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
-                self.log.debug(f'Opened serial port {p}')
+                self.log.debug('Port open.')
                 self.btn_serial_open.setText(
                     f'Click to close {self.serial_available_ports[index][1]}', )
                 self.lbl_serial_status.setStyleSheet('background-color:green')
