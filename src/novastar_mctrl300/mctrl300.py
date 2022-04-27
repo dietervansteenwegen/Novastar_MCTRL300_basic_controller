@@ -9,6 +9,7 @@ import serial
 from typing import Union, List
 # from novastar_mctrl300.serports import Mctrl300Serial
 from serports import Mctrl300Serial
+from time import sleep
 
 BAUDRATE = 115200
 TIMEOUT = 4
@@ -118,8 +119,60 @@ class MCTRL300:
         Args:
             cmd (bytearray): command to be sent to port/processor.
         """
+        self.serport.reset_input_buffer()
         self.serport.write(cmd)
+        self._print_cmd(cmd)
         self._msg_id += 1
+        if self._msg_id > 0xFF:
+            self._msg_id = 0
+        sleep(0.1)
+
+    def get_brightness(self, port: int) -> Union[int, None]:
+        cmd = self.creator.generate(
+            serno=self._msg_id,
+            port=port,
+            reg_addr=self.REG_BRIGHTNESS_OVERALL,
+            data_len=1,
+            data=None,
+            is_write=False,
+        )
+        used_msg_id = self._msg_id
+        # print(f'sent id: {cmd[3]}')
+        self._send_cmd(cmd)
+        response = self._get_response(used_msg_id, reply_data_length=1)
+        return (response[0] if response else None)
+
+    def _get_response(
+        self,
+        used_msg_id,
+        reply_data_length: int,
+        timeout: int = 1,
+    ) -> Union[bytearray, None]:
+        timeout_cntr: float = 0
+        rx_buff: bytearray = bytearray()
+        LENGTH_OF_MSG_WITHOUT_DATA = 20
+        complete = False
+
+        while timeout_cntr < timeout:
+            while self.serport.in_waiting > 0:
+                rx_buff.extend(self.serport.read())
+            rx_buff = self._cleanup_rx_buff(rx_buff)
+            if len(rx_buff) >= LENGTH_OF_MSG_WITHOUT_DATA + reply_data_length:
+                complete = True
+                rx_buff = rx_buff[:-2]  # strip checksum
+                break
+            sleep(0.05)
+            timeout_cntr += 0.05
+        # self._print_cmd(rx_buff)
+        correct_reply = complete and rx_buff[3] == used_msg_id
+
+        return (rx_buff[-reply_data_length:] if correct_reply else None)
+
+    def _cleanup_rx_buff(self, rx_buff: bytearray) -> bytearray:
+        if len(rx_buff) < 2:
+            return rx_buff
+        start = rx_buff.find(0xAA)
+        return (rx_buff[start:] if rx_buff[start + 1] == 0x55 else bytearray())
 
 
 class MCTRL300CreateCommand:
@@ -245,5 +298,10 @@ class MCTRL300CreateCommand:
 if __name__ == '__main__':
     p = Mctrl300Serial('/dev/ttyUSB0')
     s = MCTRL300(p)
-    s.set_pattern(MCTRL300.PATTERN_RED, 1)
-    s.set_brightness(1, 0x10)
+    # s.get_brightness(1)
+    # s.set_pattern(MCTRL300.PATTERN_RED, 1)
+    # s.set_brightness(1, 0x10)
+    for i in range(0x2):
+        s.set_brightness(1, i)
+        j = s.get_brightness(1)
+        print(f'set to: {i}, reply: {j}.......{j == i}\n')
