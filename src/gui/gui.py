@@ -52,17 +52,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # TODO: send out brightness set commands
         self.lbl_brightness_value.setText(str(v))
         if self.led_screen:
-            self.led_screen.set_brightness(v)
+            self.led_screen.set_brightness(self.selected_port, v)
 
     def _output_changed(self, index: int):
         if index == 0 or self.serport is None:
             self.led_screen = None
             self._change_state_to(2)
         elif index == 1:
-            self.led_screen = mctrl300.Out1(self.serport)
+            self.led_screen = mctrl300.MCTRL300(serport=self.serport)
+            self.selected_port = 1
             self._change_state_to(3)
+            self._update_brightness_from_screen()
         elif index == 2:
-            self.led_screen = mctrl300.Out2(self.serport)
+            self.led_screen = mctrl300.MCTRL300(serport=self.serport)
+            self.selected_port = 2
             self._change_state_to(3)
 
     def _refresh_serial_ports(self) -> None:
@@ -141,42 +144,42 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def _pattern_red(self):
         if self.led_screen:
-            self.led_screen.red()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_red.setChecked(True)
 
     def _pattern_blue(self):
         if self.led_screen:
-            self.led_screen.blue()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_BLUE, self.selected_port)
             self.btn_blue.setChecked(True)
 
     def _pattern_green(self):
         if self.led_screen:
-            self.led_screen.green()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_GREEN, self.selected_port)
             self.btn_green.setChecked(True)
 
     def _pattern_white(self):
         if self.led_screen:
-            self.led_screen.white()
-            self.btn_normal.setChecked(True)
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_WHITE, self.selected_port)
+            self.btn_white.setChecked(True)
 
     def _pattern_slash(self):
         if self.led_screen:
-            self.led_screen.slash()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_SLASH, self.selected_port)
             self.btn_slash.setChecked(True)
 
     def _pattern_normal(self):
         if self.led_screen:
-            self.led_screen.normal()
+            self.led_screen.deactivate_pattern(self.selected_port)
             self.btn_normal.setChecked(True)
 
     def _pattern_black(self):
         if self.led_screen:
-            self.led_screen.black()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_black.setChecked(True)
 
     def _pattern_freeze(self):
         if self.led_screen:
-            self.led_screen.freeze()
+            self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_freeze.setChecked(True)
 
 
