@@ -11,14 +11,69 @@ import serial.serialutil
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
 import logging
+import logging.handlers
+import datetime as dt
 
 from .main_window import Ui_MainWindow
+
+LOG_FMT = (
+    '%(asctime)s|%(levelname)-8.8s|%(module)-15.15s|%(lineno)-0.3d|'
+    '%(funcName)-20.20s |%(message)s'
+)
+DATEFMT = '%d/%m/%Y %H:%M:%S'
+LOGFILE = './logfile.log'
+LOGMAXBYTES = 500000
+
+
+class MilliSecondsFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        # sourcery skip: lift-return-into-if, remove-unnecessary-else
+        ct = dt.datetime.fromtimestamp(record.created)
+        if datefmt:
+            s = ct.strftime(datefmt)
+        else:
+            t = ct.strftime(DATEFMT)
+            s = f'{t}.{int(record.msecs)}'
+        return s
+
+
+def setup_logger() -> logging.Logger:
+    """Setup logging.
+    Returns logger object with (at least) 1 streamhandler to stdout.
+
+    Returns:
+        logging.Logger: configured logger object
+    """
+    logger = logging.getLogger()  # DON'T specifiy name in order to create root logger!
+    logger.setLevel(logging.DEBUG)
+
+    stream_handler = logging.StreamHandler()  # handler to stdout
+    stream_handler.setLevel(logging.ERROR)
+    stream_handler.setFormatter(MilliSecondsFormatter(LOG_FMT))
+    logger.addHandler(stream_handler)
+    return logger
+
+
+def add_rotating_file(logger: logging.Logger) -> logging.Logger:
+    rot_fil_handler = logging.handlers.RotatingFileHandler(
+        LOGFILE,
+                                                           maxBytes=LOGMAXBYTES,
+        backupCount=3,
+    )
+    rot_fil_handler.doRollover()
+    rot_fil_handler.setLevel(logging.DEBUG)
+    rot_fil_handler.setFormatter(MilliSecondsFormatter(LOG_FMT))
+    logger.addHandler(rot_fil_handler)
+
+    return logger
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        self.log = logging.getLogger(__name__)
+        log = setup_logger()
+        self.log = add_rotating_file(log)
+        self.log.debug('Starting')
         self.setupUi(self)
         self._refresh_serial_ports()
         self.serport = None
