@@ -18,7 +18,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle('Novastar MCTRL300 basic controller')
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap('./assets/images/logo.png'), QtGui.QIcon.Normal,
+            QtGui.QPixmap('./assets/images/logo.png'),
+            QtGui.QIcon.Normal,
             QtGui.QIcon.Off,
         )
         MainWindow.setWindowIcon(icon)
@@ -98,8 +99,7 @@ class Ui_MainWindow(object):
         self.cmb_output.setObjectName('cmb_output')
         self.lbl_output_port.setText('Screen connected to:')
         self.cmb_output.setToolTip('Select which output screen is connected to')
-        self.cmb_output.addItems(['No screen', 'Output 1'])
-        # self.cmb_output.addItems(['No screen', 'Output 1', 'Output 2'])
+        self.cmb_output.addItems(['No screen', 'Output 1', 'Output 2'])
         self.cmb_output.setCurrentIndex(0)
         self.v_layout_output.addWidget(self.cmb_output)
         self.line_2 = QtWidgets.QFrame(self.centralwidget)
