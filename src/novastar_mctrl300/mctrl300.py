@@ -3,11 +3,10 @@
 
 __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
-__project_link__ = 'https://github.com/dietervansteenwegen/desay6mm_upad2mm6_ctrl'
+__project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
 
 import serial
 from typing import Union, List
-# from novastar_mctrl300.serports import Mctrl300Serial
 from novastar_mctrl300.serports import Mctrl300Serial
 from time import sleep
 
@@ -136,7 +135,6 @@ class MCTRL300:
             is_write=False,
         )
         used_msg_id = self._msg_id
-        self._print_cmd(cmd)
         self._send_cmd(cmd)
         response = self._get_response(used_msg_id, reply_data_length=1)
         return (response[0] if response else None)

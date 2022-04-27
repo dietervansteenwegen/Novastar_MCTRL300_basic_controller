@@ -1,12 +1,17 @@
+#! /usr/bin/python3
 # -*- coding: utf-8 -*-
-from typing import List
 
+__author__ = 'Dieter Vansteenwegen'
+__project__ = 'Novastar_MCTRL300_basic_controller'
+__project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
+
+from typing import List
 import novastar_mctrl300.mctrl300 as mctrl300
 import serial.serialutil
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
 
-from .main_window_2 import Ui_MainWindow
+from .main_window import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -77,13 +82,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             QtWidgets.QMessageBox.critical(
                 self,
-                'No reply from screen', 'Screen did not reply when requesting current brightness'
+                'No reply from screen',
+                'Screen did not reply when requesting current brightness'
                 f' from output {self.selected_port}. Check connections and configuration...',
                 buttons=QtWidgets.QMessageBox.Ok,
             )
             self.cmb_output.setCurrentIndex(0)
             self._change_state_to(2)
-            print('changed state')
 
     def _refresh_serial_ports(self) -> None:
         self.lst_serial_ports.clear()
@@ -115,7 +120,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.serport = serports.Mctrl300Serial(self.serial_available_ports[index][1])
             except (FileNotFoundError, serial.serialutil.SerialException) as e:
                 # TODO: add logging to file and option to open logfile
-                print(e)
                 self._refresh_serial_ports()
                 self.btn_serial_open.setChecked(False)
                 self._change_state_to(1)
