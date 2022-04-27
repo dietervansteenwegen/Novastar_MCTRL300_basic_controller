@@ -162,8 +162,9 @@ class MCTRL300:
                 break
             sleep(0.05)
             timeout_cntr += 0.05
-        # self._print_cmd(rx_buff)
-        correct_reply = complete and rx_buff[3] == used_msg_id
+        correct_reply = complete and rx_buff[3] == used_msg_id and rx_buff[2] == 00
+        if rx_buff[2] != 0:
+            print(f'wrong reply: {rx_buff}')
 
         return (rx_buff[-reply_data_length:] if correct_reply else None)
 
