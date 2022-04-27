@@ -7,7 +7,8 @@ __project_link__ = 'https://github.com/dietervansteenwegen/desay6mm_upad2mm6_ctr
 
 import serial
 from typing import Union, List
-from novastar_mctrl300.serports import Mctrl300Serial
+# from novastar_mctrl300.serports import Mctrl300Serial
+from serports import Mctrl300Serial
 
 BAUDRATE = 115200
 TIMEOUT = 4
