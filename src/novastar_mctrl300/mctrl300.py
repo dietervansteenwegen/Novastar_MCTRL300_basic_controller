@@ -165,7 +165,7 @@ class MCTRL300:
             timeout_cntr += 0.05
         correct_reply = complete and rx_buff[3] == used_msg_id and rx_buff[2] == 00
         if rx_buff[2] != 0:
-            self.log.error(f'Got an incorrect reply: {rxbuff}', exc_info=True)
+            self.log.error(f'Got an incorrect reply: {rx_buff}')
 
         return (rx_buff[-reply_data_length:] if correct_reply else None)
 

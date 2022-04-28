@@ -147,7 +147,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 f' from output {self.selected_port}. Check connections and configuration...',
                 buttons=QtWidgets.QMessageBox.Ok,
             )
-            self.log.error('Issue while getting brightness.', exc_info=True)
+            self.log.error('Issue while getting brightness.')
             self.cmb_output.setCurrentIndex(0)
             self._change_state_to(2)
 
