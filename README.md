@@ -28,7 +28,7 @@ See this [link](www.vansteenwegen.org) for information on some of my other proje
 
 Version numbers according to [Semantic Versioning 2.0.0](https://semver.org/).
 
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dietervansteenwegen/Novastar_MCTRL300_basic_controller/develop?style=plastic)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/dietervansteenwegen/Novastar_MCTRL300_basic_controller/master?style=plastic)
 
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/dietervansteenwegen/Novastar_MCTRL300_basic_controller/develop?style=plastic)
 
