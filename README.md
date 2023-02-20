@@ -1,6 +1,7 @@
 # Novastar MCTRL300 basic controller
 
 Simple, basic control of brightness and test patterns/mode for the [Novastar MCTRL300](https://www.novastar.tech/products/controller/mctrl300/).
+Builds/executables are not available but if anyone has use for them, I’d happily create one for you (Windows or Linux only)…
 
 ## Why?
 I repair several types of LED panels, among which are Desay 6mm and UPAD 2.6mm.
