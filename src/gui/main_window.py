@@ -10,10 +10,18 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 import logging
 
+import os
+import pathlib
+
+base = os.path.dirname(__file__)
+base = pathlib.Path(base).parent.parent
+print(f'{base=}')
+logo_location = os.path.join(base, 'assets', 'include', 'logo.png')
+print(f'{logo_location=}')
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-
         self.log = logging.getLogger(__name__)
         self.log.debug('Start setupUi')
         MainWindow.setObjectName('MainWindow')
@@ -21,7 +29,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle('Novastar MCTRL300 basic controller')
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap('./assets/images/logo.png'),
+            QtGui.QPixmap(os.path.join(base, 'assets', 'include', 'logo.png')),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off,
         )

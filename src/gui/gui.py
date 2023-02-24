@@ -13,6 +13,7 @@ from PyQt5 import QtWidgets
 import logging
 import logging.handlers
 import datetime as dt
+import contextlib
 
 from .main_window import Ui_MainWindow
 
@@ -26,6 +27,7 @@ LOGMAXBYTES = 500000
 
 
 class MilliSecondsFormatter(logging.Formatter):
+
     def formatTime(self, record, datefmt=None):
         # sourcery skip: lift-return-into-if, remove-unnecessary-else
         ct = dt.datetime.fromtimestamp(record.created)
@@ -69,6 +71,7 @@ def add_rotating_file(logger: logging.Logger) -> logging.Logger:
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         log = setup_logger()
@@ -118,23 +121,35 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.led_screen.set_brightness(self.selected_port, v)
 
     def _output_changed(self, index: int):
-        if index == 0 or self.serport is None:
-            self.led_screen = None
-            self._change_state_to(2)
-        elif index == 1:
-            self.led_screen = mctrl300.MCTRL300(serport=self.serport)
-            self.selected_port = 1
+        success = False
+        if index in {1, 2} and self.serport is not None:
+            success: bool = bool(self.create_screen(index))
+
+        if not success:
+            self._initialize_state()
+
+    def _initialize_state(self) -> None:
+        self.led_screen = None
+        self._change_state_to(2)
+
+    def create_screen(self, output):
+        success = False
+        with contextlib.suppress(mctrl300.MCTRL300Error):
+            self.led_screen: mctrl300.MCTRL300 = mctrl300.MCTRL300(serport=self.serport)
+            self.selected_port = output
             self._change_state_to(3)
             self._update_brightness_from_screen()
-        elif index == 2:
-            self.led_screen = mctrl300.MCTRL300(serport=self.serport)
-            self.selected_port = 2
-            self._change_state_to(3)
-            self._update_brightness_from_screen()
+            success = True
+        return success
 
     def _update_brightness_from_screen(self) -> None:
-        brightness = self.led_screen.get_brightness(self.selected_port)
         self.log.debug(f'Querying brightness from output {self.selected_port}')
+        try:
+            brightness = self.led_screen.get_brightness(self.selected_port)
+        except mctrl300.MCTRL300IncorrectReplyError as e:
+            self.log.error(e)
+            raise mctrl300.MCTRL300Error from e
+
         if brightness is not None:
             self.lbl_brightness_value.setText(brightness.__str__())
             self.sldr_brightness.setValue(brightness)
