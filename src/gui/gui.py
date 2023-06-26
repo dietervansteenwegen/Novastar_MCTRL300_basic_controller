@@ -14,8 +14,9 @@ import logging
 import logging.handlers
 import datetime as dt
 import contextlib
-
+import itertools
 from .main_window import Ui_MainWindow
+from PyQt5.QtCore import QTimer
 
 LOG_FMT = (
     '%(asctime)s|%(levelname)-8.8s|%(module)-15.15s|%(lineno)-0.3d|'
@@ -24,6 +25,7 @@ LOG_FMT = (
 DATEFMT = '%d/%m/%Y %H:%M:%S'
 LOGFILE = './logfile.log'
 LOGMAXBYTES = 500000
+TMR_MSECS = 750
 
 
 class MilliSecondsFormatter(logging.Formatter):
@@ -85,6 +87,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._connect_slots()
         self._update_to_state()
         self._set_up_timer_brightness()
+        self._set_up_timer()
+        self._setup_pattern_generator()
+
+    def _setup_pattern_generator(self) -> None:
+        self.pattern_list = itertools.cycle([
+            mctrl300.MCTRL300.PATTERN_RED,
+            mctrl300.MCTRL300.PATTERN_GREEN,
+            mctrl300.MCTRL300.PATTERN_BLUE,
+        ])
+
+    def _set_up_timer(self) -> None:
+        self.timer = QTimer()
+        self.timer.setInterval(TMR_MSECS)
+        self.timer.timeout.connect(self._timer_timeout)
 
     def _set_up_timer_brightness(self):
         # TODO: Timer querying brightness and setting slider value + label
@@ -98,12 +114,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_blackout.clicked.connect(self._pattern_black)
         self.btn_blue.clicked.connect(self._pattern_blue)
         self.btn_freeze.clicked.connect(self._pattern_freeze)
+        self.btn_cycle_colors.clicked.connect(self._pattern_cycle_colors)
         self.btn_green.clicked.connect(self._pattern_green)
         self.btn_normal.clicked.connect(self._pattern_normal)
         self.btn_red.clicked.connect(self._pattern_red)
         self.btn_slash.clicked.connect(self._pattern_slash)
         self.btn_white.clicked.connect(self._pattern_white)
-        self.sldr_brightness.sliderMoved.connect(self._brightness_slider_moved)
+        self.sldr_brightness.valueChanged.connect(self._brightness_value_changed)
+        # self.sldr_brightness.sliderMoved.connect(self._brightness_value_changed)
         self.set_normal.triggered.connect(self._pattern_normal)
         self.set_red.triggered.connect(self._pattern_red)
         self.set_green.triggered.connect(self._pattern_green)
@@ -112,9 +130,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.set_slash.triggered.connect(self._pattern_slash)
         # self.set_blackout.triggered.connect(self._pattern_blackout)
         self.set_freeze.triggered.connect(self._pattern_freeze)
+        self.set_cycle_colors.triggered.connect(self._pattern_cycle_colors)
         self.log.debug('Signals/slots connected')
 
-    def _brightness_slider_moved(self, v):
+    def _brightness_value_changed(self, v):
         # TODO: send out brightness set commands
         self.lbl_brightness_value.setText(str(v))
         if self.led_screen:
@@ -239,16 +258,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_blue.setEnabled(self.state > 2)
         self.btn_white.setEnabled(self.state > 2)
         self.btn_slash.setEnabled(self.state > 2)
+        self.btn_cycle_colors.setEnabled(self.state > 2)
         # self.btn_freeze.setEnabled(self.state > 2)
         # self.btn_blackout.setEnabled(self.state > 2)
         self.btn_freeze.setEnabled(False)
         self.btn_blackout.setEnabled(False)
 
+    def _timer_timeout(self) -> None:
+        if self.btn_cycle_colors.isChecked():
+            next_pattern = next(self.pattern_list)
+            self.led_screen.set_pattern(next_pattern, self.selected_port)
+        else:
+            self.timer.stop()
+            self._setup_pattern_generator()
+
+    def _pattern_cycle_colors(self) -> None:
+        if self.led_screen:
+            # self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
+            self.btn_cycle_colors.setChecked(True)
+            self.log.debug('Cycle colors activated.')
+            self.timer.start()
+            self._timer_timeout()
+
     def _pattern_red(self):
         if self.led_screen:
             self.led_screen.set_pattern(mctrl300.MCTRL300.PATTERN_RED, self.selected_port)
             self.btn_red.setChecked(True)
-            self.log.debug(f'Output {self.selected_port} set to RED')
 
     def _pattern_blue(self):
         if self.led_screen:

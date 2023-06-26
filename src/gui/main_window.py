@@ -21,6 +21,7 @@ print(f'{logo_location=}')
 
 
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
         self.log = logging.getLogger(__name__)
         self.log.debug('Start setupUi')
@@ -180,6 +181,10 @@ class Ui_MainWindow(object):
         self.btn_white.setObjectName('btn_white')
         self.verticalLayout.addWidget(self.btn_white)
         self.btn_slash = QtWidgets.QRadioButton(self.horizontalLayoutWidget_2)
+        self.btn_cycle_colors = QtWidgets.QRadioButton(self.horizontalLayoutWidget_2)
+        self.btn_cycle_colors.setText('Cycle colors')
+        self.btn_cycle_colors.setObjectName('btn_cycle_colors')
+        self.verticalLayout.addWidget(self.btn_cycle_colors)
         self.btn_slash.setText('Slash')
         self.btn_slash.setObjectName('btn_slash')
         self.verticalLayout.addWidget(self.btn_slash)
@@ -270,6 +275,11 @@ class Ui_MainWindow(object):
         self.set_white.setShortcut('Ctrl+w')
         self.set_white.setText('&White')
         self.menubar_pattern.addAction(self.set_white)
+
+        self.set_cycle_colors = QtWidgets.QAction(MainWindow)
+        self.set_cycle_colors.setShortcut('Ctrl+c')
+        self.set_cycle_colors.setText('&Cycle colors')
+        self.menubar_pattern.addAction(self.set_cycle_colors)
 
         self.set_slash = QtWidgets.QAction(MainWindow)
         self.set_slash.setShortcut('Ctrl+s')
