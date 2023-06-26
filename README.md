@@ -3,6 +3,7 @@
 Simple, basic control of brightness and test patterns/mode for the [Novastar MCTRL300](https://www.novastar.tech/products/controller/mctrl300/).
 
 ## Why?
+
 I repair several types of LED panels, among which are Desay 6mm and UPAD 2.6mm.
 
 The Novastar software is written for Windows and overkill for simple control of patterns and brightness (which is all I need during testing and repair). This PyQt based solution works faster and runs on my Linux machines as well instead of having to set up a virtual machine (or Wine).
@@ -22,7 +23,6 @@ The controller has a [Silicon Labs CP2102](https://www.silabs.com/interface/usb-
 I found a couple of useful documents about the protocol Novastar uses for a couple of other of their controllers on the __Bitfocus Companion module novastar controller [repository](https://github.com/bitfocus/companion-module-novastar-controller)__, mostly while reading through the issues.
 
 ## Links
-
 
 See this [link](www.vansteenwegen.org) for information on some of my other projects.
 

@@ -1,0 +1,11 @@
+OUT1_slash;55 aa 00 4f fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 08 af 58
+OUT1_red;55 aa 00 2e fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 02 88 58
+OUT1_white;55 aa 00 17 fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 05 74 58
+OUT1_green;55 aa 00 41 fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 03 9c 58
+OUT1_blue;55 aa 00 4b fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 04 a7 58
+OUT1_normal;55 aa 00 23 fe 00 01 00 ff ff 01 00 01 01 00 02 01 00 01 7c 58
+OUT2_red;55 aa 00 54 fe 00 01 01 ff ff 01 00 01 01 00 02 01 00 02 af 58
+OUT2_norm;55 aa 00 67 fe 00 01 01 ff ff 01 00 01 01 00 02 01 00 01 c1 58
+OUT2_green;55 aa 00 74 fe 00 01 01 ff ff 01 00 01 01 00 02 01 00 03 d0 58
+OUT2_blue;55 aa 00 85 fe 00 01 01 ff ff 01 00 01 01 00 02 01 00 04 e2 58
+OUT2_slash;55 aa 00 8f fe 00 01 01 ff ff 01 00 01 01 00 02 01 00 08 f0 58

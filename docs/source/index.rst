@@ -11,8 +11,7 @@ Welcome to Desay 6mm and UPAD 2.6mm test pattern control's documentation!
    :caption: Contents:
 
    usage
-
-   modules
+   ui_objects
 
 
 
