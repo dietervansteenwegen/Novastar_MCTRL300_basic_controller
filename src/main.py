@@ -7,4 +7,10 @@ __project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_bas
 
 from gui.gui import start_gui
 
-start_gui()
+
+def main() -> None:
+    start_gui()
+
+
+if __name__ == '__main__':
+    main()

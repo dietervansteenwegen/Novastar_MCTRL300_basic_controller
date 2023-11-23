@@ -1,0 +1,142 @@
+# See https://peps.python.org/pep-0621/
+
+[project]
+name = 'Novastar_MCTRL300_Control'                                                     # No_spaces_allowed
+readme = 'README.md'
+version = '0.1.0'
+description = 'Basic control software for the Novastar MCTRL300 LED screen controller'
+# license = { file = 'LICENSE.txt' }
+# keywords = ['Test']
+authors = [
+    { email = 'github@vansteenwegen.org' },
+    { name = 'Dieter Vansteenwegen' },
+]
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Programming Language :: Python',
+]
+requires-python = ">3.5.2"
+dynamic = ["dependencies"]
+
+
+[project.urls]
+Homepage = 'https://www.vansteenwegen.org'
+# Documentation = 'https://readthedocs.org'
+Repository = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller.git'
+# Changelog = 'https://github.com/me/spam/blob/master/CHANGELOG.md'
+
+[project.scripts]
+my-package-script = 'package_dir.package:function'
+
+[project.gui-scripts]
+mctrl300 = "src.main:main"
+
+[project.optional-dependencies]
+gui = ['PyQt5']
+
+[build-system]
+requires = ['setuptools', 'setuptools-scm']
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+where = ['src'] # list of folders that contain the packages (['.'] by default)
+include = [
+    'package_dir',
+] # package names should match these glob patterns (['*'] by default)
+# exclude = ['my_package.tests*'] # exclude packages matching these glob patterns (empty by default)
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+# tests = ["B201", "B301"]
+# skips = ["B101", "B601"]
+
+# [tool.yapf]
+# based_on_style = 'pep8'
+# column_limit = 99
+# indent_width = 4
+# spaces_before_comment = 2
+# split_before_logical_operator = true
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+line-length = 100
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    # Pycodestyle errors
+    "E",
+    # Pycodestyle warnings
+    "W",
+    # Pyflakes
+    "F",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # McCabe complex structure
+    "C901",
+    # PEP8 Naming
+    "N",
+    # Flake8-Bandit
+    "S",
+    # Flake8-builtins
+    "A",
+    # Flake8-commas
+    "COM",
+    # Flake8-datetimez
+    "DTZ",
+    # Flake8-errmsg
+    "EM",
+    # Flake8-use-pathlib
+    "PTH",
+    # tryceratops
+    "TRY",
+]
+
+ignore = [
+    # Use logging.exception instead of logging.error
+    "TRY400",
+    # Raising and catching exceptions in the same block may lead to confusion
+    "TRY301",
+
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+exclude = ["*.pyi"]

@@ -1,11 +1,13 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.5.0
     hooks:
       # - id: end-of-file-fixer
       - id: check-yaml
+      - id: check-toml
+      - id: debug-statements
       - id: check-added-large-files
-        args: ['--maxkb=2500']
+        args: ['--maxkb=250']
       # - id: requirements-txt-fixer
       - id: double-quote-string-fixer
       - id: detect-private-key
@@ -14,19 +16,19 @@ repos:
       - id: fix-encoding-pragma
       - id: trailing-whitespace
 
-
-  - repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.7.1
-    hooks:
-      - id: reorder-python-imports
-        args: [--py3-plus]
-
-  - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.2.1
-    hooks:
-    -   id: add-trailing-comma
-
   -   repo: https://github.com/PyCQA/bandit
-      rev: 1.7.4
+      rev: 1.7.5
       hooks:
       - id: bandit
+        args: ["-c", "pyproject.toml"]
+        additional_dependencies: ["bandit[toml]"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.1.6
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args: [ --fix ]
+      # Run the formatter.
+      - id: ruff-format
