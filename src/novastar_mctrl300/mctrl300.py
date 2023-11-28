@@ -5,11 +5,13 @@ __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
 __project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
 
-import serial
-from typing import Union, List
-from novastar_mctrl300.serports import Mctrl300Serial
-from time import sleep
 import logging
+from time import sleep
+from typing import List, Union
+
+import serial
+
+from novastar_mctrl300.serports import Mctrl300Serial
 
 BAUDRATE = 115200
 TIMEOUT = 4
@@ -24,7 +26,6 @@ class MCTRL300IncorrectReplyError(MCTRL300Error):
 
 
 class MCTRL300:
-
     REG_TEST_PATTERN = 0x02000101
     REG_BRIGHTNESS_OVERALL = 0x02000001
 
@@ -148,7 +149,7 @@ class MCTRL300:
         used_msg_id = self._msg_id
         self._send_cmd(cmd)
         response = self._get_response(used_msg_id, reply_data_length=1)
-        return (response[0] if response else None)
+        return response[0] if response else None
 
     def _get_response(
         self,
@@ -158,14 +159,14 @@ class MCTRL300:
     ) -> Union[bytearray, None]:
         timeout_cntr: float = 0
         rx_buff: bytearray = bytearray()
-        LENGTH_OF_MSG_WITHOUT_DATA = 20
+        msg_without_data_length = 20
         complete = False
 
         while timeout_cntr < timeout:
             while self.serport.in_waiting > 0:
                 rx_buff.extend(self.serport.read())
             rx_buff = self._cleanup_rx_buff(rx_buff)
-            if len(rx_buff) >= LENGTH_OF_MSG_WITHOUT_DATA + reply_data_length:
+            if len(rx_buff) >= msg_without_data_length + reply_data_length:
                 complete = True
                 rx_buff = rx_buff[:-2]  # strip checksum
                 break
@@ -176,17 +177,16 @@ class MCTRL300:
             self.log.error(f'Got an incorrect reply: {rx_buff}')
             raise MCTRL300IncorrectReplyError(rx_buff)
 
-        return (rx_buff[-reply_data_length:] if correct_reply else None)
+        return rx_buff[-reply_data_length:] if correct_reply else None
 
     def _cleanup_rx_buff(self, rx_buff: bytearray) -> bytearray:
         if len(rx_buff) < 2:
             return rx_buff
         start = rx_buff.find(0xAA)
-        return (rx_buff[start:] if rx_buff[start + 1] == 0x55 else bytearray())
+        return rx_buff[start:] if rx_buff[start + 1] == 0x55 else bytearray()
 
 
 class MCTRL300CreateCommand:
-
     def __init__(self):
         self.msg = bytearray()
 
@@ -255,7 +255,7 @@ class MCTRL300CreateCommand:
         Args:
             data (Union[int, list, None]): data payload (None if no data to be sent)
         """
-        if data and type(data) == list:
+        if data and isinstance(data, list):
             self.msg.append(*data)
         elif data is not None:
             self.msg.append(data)
@@ -296,7 +296,7 @@ class MCTRL300CreateCommand:
         self.msg.append(port - 1)
 
     def _append_board_addr(self, is_cmd: bool) -> None:
-        for i in ([0xFF, 0xFF] if is_cmd else [0x0, 0x0]):
+        for i in [0xFF, 0xFF] if is_cmd else [0x0, 0x0]:
             self.msg.append(i)
 
     def _append_cmd_type(self, is_write) -> None:

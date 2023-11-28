@@ -5,18 +5,20 @@ __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
 __project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
 
+import contextlib
+import datetime as dt
+import itertools
+import logging
+import logging.handlers
 from typing import List
+
 import novastar_mctrl300.mctrl300 as mctrl300
 import serial.serialutil
 from novastar_mctrl300 import serports
 from PyQt5 import QtWidgets
-import logging
-import logging.handlers
-import datetime as dt
-import contextlib
-import itertools
-from .main_window import Ui_MainWindow
 from PyQt5.QtCore import QTimer
+
+from .main_window import Ui_MainWindow
 
 LOG_FMT = (
     '%(asctime)s|%(levelname)-8.8s|%(module)-15.15s|%(lineno)-0.3d|'
@@ -29,10 +31,9 @@ TMR_MSECS = 750
 
 
 class MilliSecondsFormatter(logging.Formatter):
-
-    def formatTime(self, record, datefmt=None):
+    def formatTime(self, record, datefmt=None):  # noqa: N802
         # sourcery skip: lift-return-into-if, remove-unnecessary-else
-        ct = dt.datetime.fromtimestamp(record.created)
+        ct = dt.datetime.fromtimestamp(record.created)  # noqa: DTZ006
         if datefmt:
             s = ct.strftime(datefmt)
         else:
@@ -73,7 +74,6 @@ def add_rotating_file(logger: logging.Logger) -> logging.Logger:
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         log = setup_logger()
@@ -91,11 +91,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._setup_pattern_generator()
 
     def _setup_pattern_generator(self) -> None:
-        self.pattern_list = itertools.cycle([
-            mctrl300.MCTRL300.PATTERN_RED,
-            mctrl300.MCTRL300.PATTERN_GREEN,
-            mctrl300.MCTRL300.PATTERN_BLUE,
-        ])
+        self.pattern_list = itertools.cycle(
+            [
+                mctrl300.MCTRL300.PATTERN_RED,
+                mctrl300.MCTRL300.PATTERN_GREEN,
+                mctrl300.MCTRL300.PATTERN_BLUE,
+            ],
+        )
 
     def _set_up_timer(self) -> None:
         self.timer = QTimer()
@@ -224,7 +226,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lbl_serial_status.setText(f'Opened {self.serial_available_ports[index][1]}')
                 self.log.debug('Port open.')
                 self.btn_serial_open.setText(
-                    f'Click to close {self.serial_available_ports[index][1]}', )
+                    f'Click to close {self.serial_available_ports[index][1]}',
+                )
                 self.lbl_serial_status.setStyleSheet('background-color:green')
                 self._change_state_to(2)
             else:

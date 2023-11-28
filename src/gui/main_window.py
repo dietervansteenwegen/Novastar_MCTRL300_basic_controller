@@ -5,13 +5,11 @@ __author__ = 'Dieter Vansteenwegen'
 __project__ = 'Novastar_MCTRL300_basic_controller'
 __project_link__ = 'https://github.com/dietervansteenwegen/Novastar_MCTRL300_basic_controller'
 
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-from PyQt5 import QtWidgets
 import logging
-
 import os
 import pathlib
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 base = os.path.dirname(__file__)
 base = pathlib.Path(base).parent.parent
@@ -21,7 +19,6 @@ print(f'{logo_location=}')
 
 
 class Ui_MainWindow(object):
-
     def setupUi(self, MainWindow):
         self.log = logging.getLogger(__name__)
         self.log.debug('Start setupUi')

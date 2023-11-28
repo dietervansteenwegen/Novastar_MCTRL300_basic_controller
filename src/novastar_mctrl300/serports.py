@@ -14,7 +14,7 @@ TIMEOUT = 4
 
 def get_available_ports() -> list:
     ports = list_ports.comports(include_links=False)
-    return ([(i, port.device, port.manufacturer, port.product) for i, port in enumerate(ports)])
+    return [(i, port.device, port.manufacturer, port.product) for i, port in enumerate(ports)]
 
 
 class Mctrl300Serial(serial.Serial):
