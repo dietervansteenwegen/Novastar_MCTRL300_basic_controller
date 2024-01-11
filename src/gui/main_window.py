@@ -227,6 +227,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self._add_pattern_menu(MainWindow)
+        self._add_brightness_menu(MainWindow)
 
         self.menu_help = QtWidgets.QMenu(self.menubar)
         self.menu_help.setObjectName('menu_help')
@@ -242,6 +243,26 @@ class Ui_MainWindow(object):
         self.menu_about.setText('&About')
         self.menu_help.addAction(self.menu_about)
         self.menubar.addAction(self.menu_help.menuAction())
+
+    def _add_brightness_menu(self, MainWindow):
+        self.menubar_brightness = QtWidgets.QMenu(self.menubar)
+        self.menubar_brightness.setTitle('Brightness')
+        self.menubar.addAction(self.menubar_brightness.menuAction())
+
+        self.set_1_pct = QtWidgets.QAction(MainWindow)
+        self.set_1_pct.setShortcut('1')
+        self.set_1_pct.setText('1%')
+        self.menubar_brightness.addAction(self.set_1_pct)
+
+        self.set_5_pct = QtWidgets.QAction(MainWindow)
+        self.set_5_pct.setShortcut('5')
+        self.set_5_pct.setText('5%')
+        self.menubar_brightness.addAction(self.set_5_pct)
+
+        self.set_100_pct = QtWidgets.QAction(MainWindow)
+        self.set_100_pct.setShortcut('0')
+        self.set_100_pct.setText('100%')
+        self.menubar_brightness.addAction(self.set_100_pct)
 
     def _add_pattern_menu(self, MainWindow):
         self.menubar_pattern = QtWidgets.QMenu(self.menubar)

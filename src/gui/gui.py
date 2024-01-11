@@ -89,6 +89,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self._set_up_timer_brightness()
         self._set_up_timer()
         self._setup_pattern_generator()
+        self.statusbar = QtWidgets.QStatusBar()
+        self.setStatusBar(self.statusbar)
+        self.statusbar.showMessage('Started...', msecs=2000)
 
     def _setup_pattern_generator(self) -> None:
         self.pattern_list = itertools.cycle(
@@ -134,6 +137,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.set_freeze.triggered.connect(self._pattern_freeze)
         self.set_cycle_colors.triggered.connect(self._pattern_cycle_colors)
         self.log.debug('Signals/slots connected')
+        self.set_1_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(1))
+        self.set_5_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(5))
+        self.set_100_pct.triggered.connect(lambda _: self.sldr_brightness.setValue(100))
 
     def _brightness_value_changed(self, v):
         # TODO: send out brightness set commands
@@ -167,9 +173,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.log.debug(f'Querying brightness from output {self.selected_port}')
         try:
             brightness = self.led_screen.get_brightness(self.selected_port)
-        except mctrl300.MCTRL300IncorrectReplyError as e:
-            self.log.error(e)
-            raise mctrl300.MCTRL300Error from e
+        except mctrl300.MCTRL300IncorrectReplyError:
+            brightness = None
 
         if brightness is not None:
             self.lbl_brightness_value.setText(brightness.__str__())
@@ -180,7 +185,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self,
                 'No reply from screen',
                 'Screen did not reply when requesting current brightness'
-                f' from output {self.selected_port}. Check connections and configuration...',
+                f' from output {self.selected_port}. Check: \n'
+                '* Cabling \n* Configuration\n* MCTRL3000 powered on',
                 buttons=QtWidgets.QMessageBox.Ok,
             )
             self.log.error('Issue while getting brightness.')
